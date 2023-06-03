@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>隨機抽取</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="number"],
+    textarea {
+      display: block;
+      width: 300px;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      resize: vertical;
+      text-align: left;
+    }
+
+    button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #loader {
+      margin: 20px auto;
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+    }
+
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <h1>KyawKyawAungさま隨機抽選系統</h1>
+  <div style="text-align: center; margin-top: 20px;">
+    <label for="items">輸入所要抽取的選項（每行一個）：</label>
+  <br>
+  <textarea id="items" rows="5" placeholder="選項1
+選項2
+選項3" style="margin: 10px auto;"></textarea>
+  <br>
+    <label for="num">抽取數目：</label>
+  <br>
+  <input type="number" id="num" min="1" value="1" style="margin: 10px auto;">
+</div>
+  <div style="text-align: center;">
+    <button onclick="startDraw()">開始抽取</button>
+    <div id="loader"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function startDraw() {
+      var itemsInput = document.getElementById("items");
+      var items = itemsInput.value.split("\n").map(function(item) {
+        return item.trim();
+      });
+
+      items = items.filter(function(item) {
+        return item !== "";
+      });
+
+      if (items.length < 2) {
+        alert("請至少輸入兩個選項！");
+        return;
+      }
+
+            var numInput = document.getElementById("num");
+      var num = parseInt(numInput.value);
+
+      if (isNaN(num) || num < 1 || num > items.length) {
+        alert("請輸入有效的抽取數目！");
+        return;
+      }
+
+      var loader = document.getElementById("loader");
+      var resultDiv = document.getElementById("result");
+
+      loader.style.display = "block"; // 显示动画
+
+      setTimeout(function() {
+        var selectedItems = [];
+        while (selectedItems.length < num) {
+          var randomIndex = Math.floor(Math.random() * items.length);
+          var selectedItem = items[randomIndex];
+
+          if (!selectedItems.includes(selectedItem)) {
+            selectedItems.push(selectedItem);
+          }
+        }
+
+        loader.style.display = "none"; // 隐藏动画
+
+        resultDiv.style.visibility = "visible"; // 显示结果
+        resultDiv.textContent = "抽取結果：" + selectedItems.join(", ");
+      }, 2000); // 这里的2000表示抽取的时间为2秒，可以根据需要调整
+    }
+  </script>
+</body>
+</html>
+
